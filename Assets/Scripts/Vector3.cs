@@ -1,86 +1,213 @@
 ﻿using System;
+using System.Text;
 
 namespace cyclone
 {
-    class Vector3
+    public class Vector3
     {
-        public float x;
-        public float y;
-        public float z;
-        private double pad;
-
-
+        public double x { get; set; }
+        public double y { get; set; }
+        public double z { get; set; }
+        
         public Vector3()
         {
-            this.x = 0;
-            this.y = 0;
-            this.z = 0;
         }
 
-        public Vector3(float x, float y, float z)
+        public Vector3(double x, double y, double z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        void Invert()
+        public Vector3(Vector3 vector)
+        {
+            x = vector.x;
+            y = vector.y;
+            z = vector.z;
+        }
+
+
+        public double this[int i]
+        {
+            get
+            {
+                if (i < 0 || i > 2)
+                {
+                    throw new IndexOutOfRangeException("Index " + i + " does not correspond to a Vector3 component.");
+                }
+
+                if (i == 0)
+                {
+                    return x;
+                }
+
+                if (i == 1)
+                {
+                    return y;
+                }
+
+                return z;
+            }
+        }
+
+        public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
+        {
+            return new Vector3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z);
+        }
+        
+        public static Vector3 operator -(Vector3 lhs, Vector3 rhs)
+        {
+            return new Vector3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+        }
+
+        public static Vector3 operator *(Vector3 lhs, double value)
+        {
+            return new Vector3(lhs.x * value, lhs.y * value, lhs.z * value);
+        }
+
+        public static bool operator ==(Vector3 lhs, Vector3 rhs)
+        {
+            return ((lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z));
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(System.Object obj)
+        {
+            // If parameter is null return false.
+            if (obj == null)
+            {
+                return false;
+            }
+
+            // If parameter cannot be cast to Point return false.
+            Vector3 v = obj as Vector3;
+            if ((System.Object)v == null)
+            {
+                return false;
+            }
+
+            // Return true if the vectors match.
+            return (x == v.x) && (y == v.y) && (z == v.z);
+        }
+        
+        public bool Equals(Vector3 v)
+        {
+            // If parameter is null return false:
+            if ((object)v == null)
+            {
+                return false;
+            }
+
+            // Return true if the vectors match.
+            return (x == v.x) && (y == v.y) && (z == v.z);
+        }
+
+        public static bool operator !=(Vector3 lhs, Vector3 rhs)
+        {
+            return !(lhs == rhs);
+        }
+        
+        public static bool operator <(Vector3 lhs, Vector3 rhs)
+        {
+            return (lhs.x < rhs.x) && (lhs.y < rhs.y) && (lhs.z < rhs.z);
+        }
+
+        public static bool operator >(Vector3 lhs, Vector3 rhs)
+        {
+            return (lhs.x > rhs.x) && (lhs.y > rhs.y) && (lhs.z > rhs.z);
+        }
+        
+        public Vector3 ComponentProduct(Vector3 vector)
+        {
+            return new Vector3(x * vector.x, y * vector.y, z * vector.z);
+        }
+
+        public void ComponentProductUpdate(Vector3 vector)
+        {
+            x *= vector.x;
+            y *= vector.y;
+            z *= vector.z;
+        }
+        
+        public Vector3 CrossProduct(Vector3 vector)
+        {
+            return new Vector3(y * vector.z - z * vector.y,
+                               z * vector.x - x * vector.z,
+                               x * vector.y - y * vector.x);
+        }
+        
+        public void CrossProductUpdate(Vector3 vector)
+        {
+            Vector3 tmp = CrossProduct(vector);
+            x = tmp.x;
+            y = tmp.y;
+            z = tmp.z;
+        }
+        
+        public double ScalarProduct(Vector3 vector)
+        {
+            return (x * vector.x) + (y * vector.y) + (z * vector.z);
+        }
+        
+        public static double operator *(Vector3 lhs, Vector3 rhs)
+        {
+            return (lhs.x * rhs.x) + (lhs.y * rhs.y) + (lhs.z * rhs.z);
+        }
+        
+        public void AddScaledVector(Vector3 vector, double scale)
+        {
+            x += vector.x * scale;
+            y += vector.y * scale;
+            z += vector.z * scale;
+        }
+
+        public double Magnitude
+        {
+            get { return System.Math.Sqrt(x * x + y * y + z * z); }
+        }
+        
+        public double SquareMagnitude
+        {
+            get { return x * x + y * y + z * z; }
+        }
+        
+        public void Normalize()
+        {
+            double length = Magnitude;
+            if (length > 0)
+            {
+                x *= 1 / length;
+                y *= 1 / length;
+                z *= 1 / length;
+            }
+        }
+        public Vector3 Unit()
+        {
+            Vector3 unit = new Vector3(this);
+            unit.Normalize();
+            return unit;
+        }
+        
+        public void Clear()
+        {
+            x = y = z = 0;
+        }
+
+        public void Invert()
         {
             x = -x;
             y = -y;
             z = -z;
         }
 
-
-        float Magnitude()
+        public void Print()
         {
-            return (float)Math.Sqrt(x * x + y * y + z * z);
+            UnityEngine.Debug.Log("(" + x + ", " + y + ", " + z + ")");
         }
-
-        float SquareMagnitude()
-        {
-            return x * x + y * y + z * z;
-        }
-
-        void Normalize()
-        {
-            float length = Magnitude();
-
-            x = x / length;
-            y = y / length;
-            z = z / length;
-        }
-
-        public static Vector3 operator +(Vector3 a, Vector3 b)
-        {
-            return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z);
-        }
-
-        public static Vector3 operator -(Vector3 a, Vector3 b)
-        {
-            return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
-        }
-
-        public static Vector3 operator *(Vector3 a, float d)
-        {
-            return new Vector3(a.x * d, a.y * d, a.z * d);
-        }
-
-        public static Vector3 operator *(float d, Vector3 a)
-        {
-            return new Vector3(a.x * d, a.y * d, a.z * d);
-        }
-
-        public static Vector3 operator /(Vector3 a, float d)
-        {
-            return new Vector3(a.x / d, a.y / d, a.z / d);
-        }
-
-        public static Vector3 ScalarProduct(Vector3 a, Vector3 b)
-        {
-            return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
-        }
-
-
     }
 }
