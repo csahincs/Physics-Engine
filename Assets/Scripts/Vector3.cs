@@ -187,6 +187,11 @@ namespace cyclone
             return unit;
         }
 
+        public void Clear()
+        {
+            x = y = z = 0;
+        }
+
         public void Invert()
         {
             x = -x;
