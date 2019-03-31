@@ -19,11 +19,6 @@ namespace cyclone
             Acceleration = new Vector3();
         }
         
-        public bool HasFiniteMass()
-        {
-            return InverseMass >= 0.0;
-        }
-        
         public void SetVelocity(double x, double y, double z)
         {
             Velocity.x = x;
@@ -62,32 +57,20 @@ namespace cyclone
         
         public void Integrate(double duration)
         {
-            // We don't integrate things with zero mass.
-            if (InverseMass <= 0.0f)
+            if (InverseMass <= 0.0f || duration <= 0.0f)
             {
                 return;
             }
 
-            // Make sure duration is positive.
-            if (duration <= 0.0)
-            {
-                throw new ArgumentOutOfRangeException("duration", "must be greater than 0");
-            }
-
-            // Update linear position.
             Position.AddScaledVector(Velocity, duration);
 
-            // Work out the acceleration from the force.
             Vector3 resultingAcc = GetAcceleration();
             resultingAcc.AddScaledVector(ForceAccum, InverseMass);
 
-            // Update linear velocity from the acceleration.
             Velocity.AddScaledVector(resultingAcc, duration);
 
-            // Impose drag.
             Velocity *= System.Math.Pow(Damping, duration);
 
-            // Clear the forces.
             ClearAccumulator();
         }
         

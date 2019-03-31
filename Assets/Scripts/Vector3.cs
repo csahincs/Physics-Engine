@@ -78,32 +78,26 @@ namespace cyclone
 
         public override bool Equals(System.Object obj)
         {
-            // If parameter is null return false.
             if (obj == null)
             {
                 return false;
             }
 
-            // If parameter cannot be cast to Point return false.
-            Vector3 v = obj as Vector3;
-            if ((System.Object)v == null)
+            if (!(obj is Vector3 v))
             {
                 return false;
             }
 
-            // Return true if the vectors match.
             return (x == v.x) && (y == v.y) && (z == v.z);
         }
         
         public bool Equals(Vector3 v)
         {
-            // If parameter is null return false:
             if ((object)v == null)
             {
                 return false;
             }
 
-            // Return true if the vectors match.
             return (x == v.x) && (y == v.y) && (z == v.z);
         }
 
@@ -191,11 +185,6 @@ namespace cyclone
             Vector3 unit = new Vector3(this);
             unit.Normalize();
             return unit;
-        }
-        
-        public void Clear()
-        {
-            x = y = z = 0;
         }
 
         public void Invert()
