@@ -5,17 +5,18 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
     public Vector3 velocity;
+    public Vector3 startingAcceleration;
     public Vector3 acceleration;
     public float damping;
     
-    private Cyclone.Particle particle = new Cyclone.Particle();
+    private cyclone.Particle particle = new cyclone.Particle();
     
     private void Start()
     {
         particle.InverseMass = 2.0f;
         particle.SetPosition(transform.position.x, transform.position.y, transform.position.z);
         particle.SetVelocity(velocity.x, velocity.y, velocity.z);
-        particle.SetAcceleration(acceleration.x, acceleration.y, acceleration.z);
+        particle.SetAcceleration(startingAcceleration.x, startingAcceleration.y, startingAcceleration.z);
         particle.Damping = damping;
 
         SetObjectPosition(particle.Position);
@@ -23,6 +24,7 @@ public class MovementController : MonoBehaviour
     
     private void Update()
     {
+        particle.SetAcceleration(acceleration.x, acceleration.y, acceleration.z);
         particle.Integrate(Time.deltaTime);
         SetObjectPosition(particle.Position);
     }

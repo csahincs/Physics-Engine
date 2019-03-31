@@ -1,7 +1,6 @@
 ﻿using System;
-using cyclone;
 
-namespace Cyclone
+namespace cyclone
 {
     public class Particle
     {
