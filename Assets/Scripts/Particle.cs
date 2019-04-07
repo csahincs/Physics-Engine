@@ -18,6 +18,16 @@ namespace cyclone
             ForceAccum = new Vector3();
             Acceleration = new Vector3();
         }
+
+        public void SetMass(double mass)
+        {
+            InverseMass = mass;
+        }
+
+        public void SetDamping(double damp)
+        {
+            Damping = damp;
+        }
         
         public void SetVelocity(double x, double y, double z)
         {
@@ -39,6 +49,8 @@ namespace cyclone
             Acceleration.y = y;
             Acceleration.z = z;
         }
+
+
         
         public Vector3 GetPosition()
         {
