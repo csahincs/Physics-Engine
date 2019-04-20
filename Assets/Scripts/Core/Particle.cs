@@ -91,7 +91,7 @@ namespace cyclone
             ForceAccum += force;
         }
         
-        private void ClearAccumulator()
+        public void ClearAccumulator()
         {
             ForceAccum.Clear();
         }
