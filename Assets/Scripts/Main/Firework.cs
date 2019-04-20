@@ -6,6 +6,11 @@ public class Firework : Particle
     public int type;
     public double age;
 
+    public Firework()
+    {
+
+    }
+
     public bool Update(double duration)
     {
         Integrate(duration);
@@ -14,6 +19,8 @@ public class Firework : Particle
         return (age < 0);
 
     }
+
+
 }
 
 public struct FireworkRule

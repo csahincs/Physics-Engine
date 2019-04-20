@@ -1,16 +1,23 @@
 ﻿using UnityEngine;
 using cyclone;
+using System.Collections.Generic;
 
 public class FireworkDemo : MonoBehaviour
 {
-    public const int maxFireworks = 1024;
     private const int ruleCount = 9;
 
-    public Firework[] fireworks = new Firework[maxFireworks];
+    public List<Firework> fireworks = new List<Firework>();
     public FireworkRule[] rules = new FireworkRule[ruleCount];
     private int nextFirework;
 
     public FireworkPrefab fireworkGO;
+
+
+    public void Start()
+    {
+        InitFireworkRules();
+        nextFirework = 0;
+    }
 
     public void InitFireworkRules()
     {
@@ -107,10 +114,13 @@ public class FireworkDemo : MonoBehaviour
         FireworkRule rule = rules[(type - 1)];
 
         // Create the firework
+        Firework fwInit = new Firework();
+        fireworks.Add(fwInit);
         Firework fw = rule.Create(fireworks[nextFirework], parent);
+        fireworks[nextFirework] = fw;
 
         // Increment the index for the next firework
-        nextFirework = (nextFirework + 1) % maxFireworks;
+        nextFirework = (nextFirework + 1);
 
         FireworkPrefab fwp = Instantiate(fireworkGO);
         fwp.Initialize(fw);
@@ -126,7 +136,7 @@ public class FireworkDemo : MonoBehaviour
 
     public void FixedUpdate()
     {
-        for(int i = 0; i < fireworks.Length; i++)
+        for(int i = 0; i < fireworks.Count; i++)
         {
             if(fireworks[i].type > 0)
             {
